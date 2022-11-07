@@ -23,6 +23,7 @@ import LammpsFiles
 
 """
 function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
+    ndim == 2 || ndim == 3 || throw(ArgumentError("argument ndim must be 2 or 3"))
     frame = LammpsFiles.read_dump(filenames[1])
     id_col = findfirst(x->x=="id", frame.properties)
     type_col = findfirst(x->x=="type", frame.properties)
@@ -36,8 +37,8 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
 
     # Do it for one frame first, by_type=false
     natoms = frame.natoms
-    bin_centers = range(start=0.5*bin_width, stop=max_distance, step=bin_width)
-    num_bins = length(bin_centers)
+    bin_edges = range(start=bin_width, stop=max_distance, step=bin_width)
+    num_bins = length(bin_edges)
     counts = zeros(num_bins)
     for i = 1 : natoms-1
         for j = i+1 : natoms
@@ -51,11 +52,11 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
     end
 
     if ndim == 3
-        rdf = counts ./ (density * 4pi * bin_width * bin_centers.^2)
-    elseif ndim == 2
-        rdf = counts ./ (density * 2pi * bin_width * bin_centers)
+        rdf = counts ./ (density * 4pi * bin_width * bin_edges.^2)
+    else
+        rdf = counts ./ (density * 2pi * bin_width * bin_edges)
     end
 
-    return (bin_centers, rdf)
+    return (bin_edges, rdf)
 
 end
