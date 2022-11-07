@@ -3,7 +3,7 @@ using Statistics
 import LammpsFiles
 
 """
-    msd(filenames...; max_num_frames=100, sorted=false, types=(0,), mol=false, masses=[1,])
+    msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
 
     [Implemented]
     Computes the MSD for a collection of LAMMPS dump files. The range of
@@ -13,12 +13,12 @@ import LammpsFiles
     If sorted == true, then the atoms are assumed to be in the same order
     in each file. If false (default), they are sorted by the column 'id'.
 
-    [Not implemented]
-    If types is false (default), the MSD for each particle is averaged. If
-    types is true, then each type is independently evaluated, and an 
+    If by_type is false (default), the MSD for each particle is averaged. 
+    If by_type is true, then each type is independently evaluated, and an 
     overall MSD is given as well. Types are only checked for the first dump
     file, so if atoms change type, that will invalidate the calculation.
-
+    
+    [Not implemented]
     If mol is set to true, then the molecule property must be available in
     the dump file. The center of mass of each molecule will be analyzed 
     instead of each atom. This assumes that the mass of each atom type is
@@ -28,7 +28,7 @@ import LammpsFiles
 function msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
     frame = LammpsFiles.read_dump(filenames[1])
     id_col = findfirst(x->x=="id", frame.properties)
-    type_col = findfirst(x->x=='type', frame.properties)
+    type_col = findfirst(x->x=="type", frame.properties)
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]
 
     coords = frame.atoms[coord_cols, : ]
@@ -46,8 +46,6 @@ function msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=
     else
         types = [0, ]
     end
-        
-
 
     for (i, f) in enumerate(filenames[2:end])
         frame = LammpsFiles.read_dump(f)
