@@ -22,7 +22,7 @@ import LammpsFiles
     periodic images.
 
 """
-function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3, px=true, py=true, pz=true)
+function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
     frame = LammpsFiles.read_dump(filenames[1])
     id_col = findfirst(x->x=="id", frame.properties)
     type_col = findfirst(x->x=="type", frame.properties)
@@ -34,7 +34,6 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
     coords = frame.atoms[coord_cols, :]
     density = frame.natoms / prod(box_dims[1:ndim])
 
-
     # Do it for one frame first, by_type=false
     natoms = frame.natoms
     bin_centers = range(start=0.5*bin_width, stop=max_distance, step=bin_width)
@@ -44,10 +43,10 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
         for j = i+1 : natoms
             diff_vec = coords[ : , i] - coords[ : , j]
             for (d, l) in zip(diff_vec, box_dims)
-                (abs(d) > l / 2) && diff_vec -= l * sign(d)
+                (abs(d) > l / 2) && (diff_vec -= l * sign(d))
             end
             dist = hypot(diff_vec)
-            (dist <= max_distance) && counts[fld(dist, bin_width) + 1] += 1
+            (dist <= max_distance) && (counts[fld(dist, bin_width) + 1] += 1)
         end
     end
 
@@ -57,6 +56,6 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
         rdf = counts ./ (density * 2pi * bin_width * bin_centers)
     end
 
-    return (bin_centers, rdf)    
+    return (bin_centers, rdf)
 
 end
