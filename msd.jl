@@ -30,6 +30,7 @@ function msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=
     id_col = findfirst(x->x=="id", frame.properties)
     type_col = findfirst(x->x=="type", frame.properties)
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]
+    max_num_frames = min(max_num_frames, length(filenames) - 1)
 
     coords = frame.atoms[coord_cols, : ]
     if !sorted
