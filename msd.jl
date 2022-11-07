@@ -1,3 +1,5 @@
+using Statistics
+
 import LammpsFiles
 
 """
@@ -21,7 +23,9 @@ instead of each atom. This assumes that the mass of each atom type is
 mass[i] is the mass of atoms of type i.
 """
 function msd(filenames...; max_num_frames=100, sorted=false, types=(0,), mol=false, masses=[1,])
-    for f in filenames
+    frame = LammpsFiles.read_dump(filenames[1])
+    all_coords = zeros(3, frame.natoms, length(filenames))
+    for (i, f) in enumerate(filenames)
         frame = LammpsFiles.read_dump(f)
         inds = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]
         coords = frame.atoms[inds, : ]
@@ -29,8 +33,14 @@ function msd(filenames...; max_num_frames=100, sorted=false, types=(0,), mol=fal
             sort_inds = sortperm(frame.atoms[findfirst(x->x=="id", frame.properties), : ])
             coords = coords[:, sort_inds]
         end
-
-
+        all_coords[ : , : , i] = coords
     end
+
+    msd = zeros(max_num_frames)
+    for dt=1:max_num_frames
+        diff = all_coords[ : , : , dt+1:end] - all_coords[ : , : , 1:end-dt]
+        msd[dt] = mean(sum(diff .* diff, dims=1))
+    end
+    return msd
 end
 
