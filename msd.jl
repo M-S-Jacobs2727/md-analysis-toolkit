@@ -22,8 +22,8 @@ import LammpsFiles
     If mol is set to true, then the molecule property must be available in
     the dump file. The center of mass of each molecule will be analyzed 
     instead of each atom. This assumes that the mass of each atom type is
-    1. If not, then set the masses keyword to a vector where each element
-    mass[i] is the mass of atoms of type i.
+    1. If not, then the masses keyword should be set to a vector where each 
+    element mass[i] is the mass of atoms of type i.
 """
 function msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
     frame = LammpsFiles.read_dump(filenames[1])
