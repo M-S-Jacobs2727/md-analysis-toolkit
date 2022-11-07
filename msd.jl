@@ -44,7 +44,7 @@ function msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=
         types = unique(frame.atoms[type_col, : ])
         selections = [findall(x->round(x)==t, frame.atoms[type_col, : ]) for t in types]
     else
-        types = [0, ]
+        types = []
     end
 
     for (i, f) in enumerate(filenames[2:end])
@@ -57,7 +57,7 @@ function msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=
         all_coords[ : , : , i+1] = coords[ : , selection]
     end
 
-    msd = zeros(length(types), max_num_frames)
+    msd = zeros(length(types)+1, max_num_frames)
     for dt=1:max_num_frames
         diff = all_coords[ : , : , dt+1:end] - all_coords[ : , : , 1:end-dt]
         msd[1, dt] = mean(sum(diff .* diff, dims=1))
