@@ -25,8 +25,19 @@ import LammpsFiles
 function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
     ndim == 2 || ndim == 3 || throw(ArgumentError("argument ndim must be 2 or 3"))
     frame = LammpsFiles.read_dump(filenames[1])
-    id_col = findfirst(x->x=="id", frame.properties)
+    
     type_col = findfirst(x->x=="type", frame.properties)
+    if by_type
+        types = frame.atoms[type_col, : ]
+        unique_types = unique(types)
+        ntypes = length(unique_types)
+        type_combos = [(i, j) for i in 1:ntypes for j in i:ntypes]
+        type_dict = Dict(type_combos[i]=>i for i in eachindex(type_combos))
+    else
+        ntypes = 0
+    end
+
+
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["x", "y", "z"][1:ndim]]
     box_dims = frame.box[ : , 2] - frame.box[ : , 1]
     if max_distance === nothing
@@ -39,7 +50,7 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
     natoms = frame.natoms
     bin_edges = range(start=bin_width, stop=max_distance, step=bin_width)
     num_bins = length(bin_edges)
-    counts = zeros(num_bins)
+    counts = zeros(num_bins, ntypes * (ntypes + 1) / 2 + 1)
     for i = 1 : natoms-1
         for j = i+1 : natoms
             diff_vec = coords[ : , i] - coords[ : , j]
@@ -47,7 +58,15 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
                 (abs(d) > l / 2) && (diff_vec -= l * sign(d))
             end
             dist = hypot(diff_vec)
-            (dist <= max_distance) && (counts[fld(dist, bin_width) + 1] += 1)
+            if dist > max_distance
+                continue
+            end
+            bin = fld(dist, bin_width) + 1
+            counts[bin, 1] += 1
+            if by_type
+                ind = type_dict[minmax(types[i], types[j])]
+                counts[bin, ind + 1] += 1
+            end
         end
     end
 
@@ -58,5 +77,4 @@ function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, 
     end
 
     return (bin_edges, rdf)
-
 end
