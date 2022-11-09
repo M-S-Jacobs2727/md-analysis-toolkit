@@ -14,8 +14,12 @@ dt = 0.002
 times = dt * timesteps
 filenames = ["dump.$(lpad(i, 9, '0')).txt" for i in timesteps]
 msd = mean_square_displacement(filenames)
+bins, rdf = radial_dist_func(filenames)
+rg2 = square_Rg(filesnames)
 
 using Plots
 pyplot()
 plot(times, msd)
+plot(bins, rdf)
+println(rg2)
 ```

@@ -2,7 +2,7 @@ using Statistics
 
 import LammpsFiles
 
-"""
+raw"""
     radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
 
     Compute the radial distribution function for a collection of LAMMPS dump
@@ -20,6 +20,10 @@ import LammpsFiles
     The number of dimensions is set by `ndim` (default 3).
     If `ndim == 2`, then the 3rd dimension is not used to computed
     periodic images.
+
+    Returns:
+        `bin_edges`: the maximum of each bin
+        `rdf`: the value of $g(r)$ for each bin
 
 """
 function radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
