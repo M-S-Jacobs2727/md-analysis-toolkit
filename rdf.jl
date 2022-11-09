@@ -3,7 +3,7 @@ using Statistics
 import LammpsFiles
 
 """
-    rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
+    radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
 
     Compute the radial distribution function for a collection of LAMMPS dump
     files (`filenames`). 
@@ -22,7 +22,7 @@ import LammpsFiles
     periodic images.
 
 """
-function rdf(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
+function radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
     ndim == 2 || ndim == 3 || throw(ArgumentError("argument ndim must be 2 or 3"))
     frame = LammpsFiles.read_dump(filenames[1])
     

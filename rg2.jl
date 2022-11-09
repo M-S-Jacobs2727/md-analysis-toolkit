@@ -3,10 +3,11 @@ using Statistics
 import LammpsFiles
 
 """
-    We assume that each particle represents a monomer with unit
-    mass and there are no other atoms in the dump files.
+    square_Rg(filenames...; sorted=false)
+
+    Compute the mean square radius of gyration of a system of polymer chains.
 """
-function rg2(filenames...; sorted=false)
+function square_Rg(filenames...; sorted=false)
     frame = LammpsFiles.read_dump(filenames[1])
     mol_col = findfirst(x->x=="mol", frame.properties)
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]

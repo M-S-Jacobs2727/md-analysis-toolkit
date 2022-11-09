@@ -3,7 +3,7 @@ using Statistics
 import LammpsFiles
 
 """
-    msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
+    mean_square_displacement(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
 
     [Implemented]
     Computes the MSD for a collection of LAMMPS dump files. The range of
@@ -25,7 +25,7 @@ import LammpsFiles
     1. If not, then the masses keyword should be set to a vector where each 
     element mass[i] is the mass of atoms of type i.
 """
-function msd(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
+function mean_square_displacement(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
     frame = LammpsFiles.read_dump(filenames[1])
     id_col = findfirst(x->x=="id", frame.properties)
     type_col = findfirst(x->x=="type", frame.properties)
