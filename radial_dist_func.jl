@@ -1,5 +1,3 @@
-using Statistics
-
 import LammpsFiles
 
 raw"""
