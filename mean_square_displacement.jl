@@ -5,25 +5,25 @@ import LammpsFiles
 """
     mean_square_displacement(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
 
-    [Implemented]
-    Computes the MSD for a collection of LAMMPS dump files. The range of
-    increments is from every 1 snapshot to every 'max_num_frames' 
-    snapshots (100 by default). 
+## Implemented
+Computes the MSD for a collection of LAMMPS dump files. The range of
+increments is from every 1 snapshot to every `max_num_frames`
+snapshots (100 by default). 
 
-    If sorted == true, then the atoms are assumed to be in the same order
-    in each file. If false (default), they are sorted by the column 'id'.
+If `sorted == true`, then the atoms are assumed to be in the same order
+in each file. If `false` (default), they are sorted by the column `id`.
 
-    If by_type is false (default), the MSD for each particle is averaged. 
-    If by_type is true, then each type is independently evaluated, and an 
-    overall MSD is given as well. Types are only checked for the first dump
-    file, so if atoms change type, that will invalidate the calculation.
-    
-    [Not implemented]
-    If mol is set to true, then the molecule property must be available in
-    the dump file. The center of mass of each molecule will be analyzed 
-    instead of each atom. This assumes that the mass of each atom type is
-    1. If not, then the masses keyword should be set to a vector where each 
-    element mass[i] is the mass of atoms of type i.
+If `by_type == false` (default), the MSD for each particle is averaged. 
+If `by_type == true`, then each type is independently evaluated, and an 
+overall MSD is given as well. Types are only checked for the first dump
+file, so if atoms change type, that will invalidate the calculation.
+
+## Not implemented
+If `mol` is set to true, then the molecule property must be available in
+the dump file. The center of mass of each molecule will be analyzed 
+instead of each atom. This assumes that the mass of each atom type is 1.
+If not, then the masses keyword should be set to a vector where each 
+element `mass[i]` is the mass of atoms of type `i`.
 """
 function mean_square_displacement(filenames...; max_num_frames=100, sorted=false, by_type=false, mol=false, masses=nothing)
     frame = LammpsFiles.read_dump(filenames[1])

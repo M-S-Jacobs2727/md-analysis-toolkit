@@ -9,20 +9,22 @@ end
 """
     autocorrelation(data)
 
-    Only works for real-valued data (not complex).
+Only works for real-valued data (not complex).
 
-    Recommended: Read the data from a text file with
+Recommended: read the data from a text file with
 
-        using DelimitedFiles
-        data = readdlm("output_data.txt", comments=true)
-        acf = autocorrelation(data)
+    using DelimitedFiles
+    data = readdlm("output_data.txt", comments=true)
+    acf = autocorrelation(data)
 
-    Input:
-        data: NxC matrix
-    
-    Output:
-        dt_values: 128-length vector
-        acf: 128xC matrix
+## Input
+`data`: NxC matrix
+
+## Returns
+`dt_values`: 128-length vector of Ints
+`acf`: 128xC matrix
+
+Note: 
     
 """
 function autocorrelation(data)

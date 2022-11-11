@@ -3,7 +3,7 @@ import LammpsFiles
 """
     square_Rg(filenames...; sorted=false)
 
-    Compute the mean square radius of gyration of a system of polymer chains.
+Compute the mean square radius of gyration of a system of polymer chains.
 """
 function square_Rg(filenames...; sorted=false)
     frame = LammpsFiles.read_dump(filenames[1])

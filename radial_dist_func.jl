@@ -1,27 +1,27 @@
 import LammpsFiles
 
-raw"""
+"""
     radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
 
-    Compute the radial distribution function for a collection of LAMMPS dump
-    files (`filenames`). 
+Compute the radial distribution function for a collection of LAMMPS dump
+files (`filenames`). 
 
-    The width of the radial bins is set to `bin_width=0.05` by default.
+The width of the radial bins is set to `bin_width=0.05` by default.
 
-    If `by_type` is false (default) then the overall RDF is computed. If 
-    true, the RDF between each type is computed.
+If `by_type == false` (default) then the overall RDF is computed. If 
+`true`, the RDF between each type is computed.
 
-    If given, the `max_distance` dictates the position of the last bin. 
-    Otherwise, it is dictated by the box size (equivalent to `max_distance=L`
-    where `L` is the box length).
+If given, the `max_distance` dictates the position of the last bin. 
+Otherwise, it is dictated by the box size (equivalent to `max_distance=L`
+where `L` is the box length).
 
-    The number of dimensions is set by `ndim` (default 3).
-    If `ndim == 2`, then the 3rd dimension is not used to computed
-    periodic images.
+The number of dimensions is set by `ndim` (default 3).
+If `ndim == 2`, then the 3rd dimension is not used to computed
+periodic images.
 
-    Returns:
-        `bin_edges`: the maximum of each bin
-        `rdf`: the value of $g(r)$ for each bin
+## Returns
+`bin_edges`: the maximum of each bin
+`rdf`: the value of `g(r)`for each bin
 
 """
 function radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_distance=nothing, ndim=3)
