@@ -3,7 +3,9 @@ import LammpsFiles
 """
     square_Rg(filenames...; sorted=false)
 
-Compute the mean square radius of gyration of a system of polymer chains.
+Compute the mean square radius of gyration of a system of polymer chains for
+each snapshot, returning a vector of length equal to the number of files
+passed.
 """
 function square_Rg(filenames...; sorted=false)
     frame = LammpsFiles.read_dump(filenames[1])
@@ -16,8 +18,8 @@ function square_Rg(filenames...; sorted=false)
     inds = [1; cumsum(natoms_per_mol)...]
     # same as `frame.natoms / nmolecules` for no solvent and monodisperse
     
-    rg2 = 0.0
-    for filename in filenames
+    rg2 = zeros(length(filenames))
+    for (i, filename) in enumerate(filenames)
         frame = LammpsFiles.read_dump(filename)
         molecules = frame.atoms[mol_col, : ]
         coords = frame.atoms[coord_cols, : ]
@@ -30,9 +32,9 @@ function square_Rg(filenames...; sorted=false)
         centers_of_mass = reshape.(sum.(coords, dims=2), 3)
         for (mol, com, dp) in zip(coords, centers_of_mass, natoms_per_mol)
             mol_offset = mol .- com
-            rg2 += sum(mol_offset .* mol_offset) / dp
+            rg2[i] += sum(mol_offset .* mol_offset) / dp
         end
     end
 
-    rg2 /= nmolecules * length(filenames)
+    rg2 ./= nmolecules
 end
