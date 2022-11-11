@@ -18,7 +18,7 @@ function square_Rg(filenames...; sorted=false)
     inds = [1; cumsum(natoms_per_mol)...]
     # same as `frame.natoms / nmolecules` for no solvent and monodisperse
     
-    rg2 = zeros(length(filenames))
+    rg2 = zeros(Float64, length(filenames))
     for (i, filename) in enumerate(filenames)
         frame = LammpsFiles.read_dump(filename)
         molecules = frame.atoms[mol_col, : ]

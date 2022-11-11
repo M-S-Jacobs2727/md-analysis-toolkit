@@ -38,7 +38,7 @@ function mean_square_displacement(filenames...; max_num_frames=100, sorted=false
         coords = coords[:, sort_inds]
     end
 
-    all_coords = zeros(3, frame.natoms, length(filenames))
+    all_coords = zeros(Float64, 3, frame.natoms, length(filenames))
     all_coords[ : , : , 1] = coords
 
     if by_type
@@ -58,7 +58,7 @@ function mean_square_displacement(filenames...; max_num_frames=100, sorted=false
         all_coords[ : , : , i+1] = coords[ : , selection]
     end
 
-    msd = zeros(length(types)+1, max_num_frames)
+    msd = zeros(Float64, length(types)+1, max_num_frames)
     for dt=1:max_num_frames
         diff = all_coords[ : , : , dt+1:end] - all_coords[ : , : , 1:end-dt]
         msd[1, dt] = mean(sum(diff .* diff, dims=1))
