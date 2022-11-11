@@ -1,9 +1,6 @@
 # MD Analysis Toolkit
 
-This is a library of simple functions written in Julia to analyze MD simulations
-in post via LAMMPS dump files
-(see my [LammpsFiles](https://code.ornl.gov/8mj/LammpsFiles) project,
-a dependency).
+This is a library of simple functions written in Julia to analyze MD simulations in post via LAMMPS dump files (see my [LammpsFiles](https://code.ornl.gov/8mj/LammpsFiles) project, a dependency).
 
 These functions should be called with the following form:
 
