@@ -30,11 +30,11 @@ function radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_dista
     
     type_col = findfirst(x->x=="type", frame.properties)
     if by_type
-        types = frame.atoms[type_col, : ]
+        types = Int.(frame.atoms[type_col, : ])
         unique_types = unique(types)
         ntypes = length(unique_types)
         type_combos = [(i, j) for i in 1:ntypes for j in i:ntypes]
-        type_dict = Dict(type_combos[i]=>i for i in eachindex(type_combos))
+        type_dict = Dict(type=>i for (i, type) in enumerate(type_combos))
     else
         ntypes = 0
     end
