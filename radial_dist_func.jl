@@ -72,9 +72,9 @@ function radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_dista
     end
 
     if ndim == 3
-        rdf = counts ./ (density * 4pi * bin_width * bin_edges.^2)
+        rdf = counts ./ (density * 4pi/3 * ((bin_edges + bin_width).^3 - bin_edges.^3))
     else
-        rdf = counts ./ (density * 2pi * bin_width * bin_edges)
+        rdf = counts ./ (density * pi * (2bin_width * bin_edges + bin_width^2))
     end
 
     return (bin_edges, rdf)
