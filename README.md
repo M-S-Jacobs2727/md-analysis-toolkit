@@ -10,7 +10,7 @@ These functions should be called with the following form:
 ```julia
 using MDAnalysis
 
-timesteps = collect(10:10:10000)
+timesteps = 10:10:10000
 dt = 0.002
 times = dt * timesteps
 filenames = ["dump.$(lpad(i, 9, '0')).txt" for i in timesteps]
