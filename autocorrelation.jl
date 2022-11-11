@@ -9,22 +9,29 @@ end
 """
     autocorrelation(data)
 
-    Only works for floating point data (not complex).
+    Only works for real-valued data (not complex).
 
-    Should be more than 2^18 = 262,144 rows
+    Recommended: Read the data from a text file with
+
+        using DelimitedFiles
+        data = readdlm("output_data.txt", comments=true)
+        acf = autocorrelation(data)
 
     Input:
-        data: NxC matrix (N > 2^18)
+        data: NxC matrix
     
     Output:
+        dt_values: 128-length vector
         acf: 128xC matrix
     
 """
 function autocorrelation(data)
     acf = zeros(eltype(data), size(data, 2), 128)
+    dt_values = zeros(Int, 128)
     i = 1
     for dt in 0:15
-        acf[i] = compute_acf(data, dt)
+        dt_values[i] = dt
+        acf[i] = compute_acf(data, dt_values[i])
         i += 1
     end
 
@@ -32,13 +39,14 @@ function autocorrelation(data)
     start = 16
     for _ in 1:14
         for j in 0:7
-            dt = start + step * j
-            acf[ : , i] = compute_acf(data, dt)
+            dt_values[i] = start + step * j
+            acf[ : , i] = compute_acf(data, dt_values[i])
             i += 1
         end
         step *= 2
         start *= 2
+        (step*2 > size(data, 1)) && break
     end
 
-    return acf'
+    return dt_values, acf'
 end
