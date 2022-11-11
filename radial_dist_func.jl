@@ -51,8 +51,7 @@ function radial_dist_func(filenames...; bin_width=0.05, by_type=false, max_dista
     # Do it for one frame first, by_type=false
     natoms = frame.natoms
     bin_edges = range(start=bin_width, stop=max_distance, step=bin_width)
-    num_bins = length(bin_edges)
-    counts = zeros(num_bins, ntypes * (ntypes + 1) / 2 + 1)
+    counts = zeros(length(bin_edges), ntypes * (ntypes + 1) / 2 + 1)
     for i = 1 : natoms-1
         for j = i+1 : natoms
             diff_vec = coords[ : , i] - coords[ : , j]
