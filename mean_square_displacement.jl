@@ -10,16 +10,16 @@ Computes the MSD for a collection of LAMMPS dump files. The range of
 increments is from every 1 snapshot to every `max_num_frames`
 snapshots (100 by default).
 
-If `types` is given, then each type is independently evaluated, and an 
+If `types` is given, then each type is independently evaluated, and an
 overall MSD is given as well. Types are only checked for the first dump
 file, so if atoms change type, that will invalidate the calculation.
 By default, the MSD for each particle is averaged.
 
 ## Not implemented
 If `by_mol` is set to true, then the molecule property must be available in
-the dump file. The center of mass of each molecule will be analyzed 
+the dump file. The center of mass of each molecule will be analyzed
 instead of each atom. This assumes that the mass of each atom type is 1.
-If not, then the masses keyword should be set to a vector where each 
+If not, then the masses keyword should be set to a vector where each
 element `mass[i]` is the mass of atoms of type `i`.
 
 Note: cannot analyze by type and by molecule at the same time.
