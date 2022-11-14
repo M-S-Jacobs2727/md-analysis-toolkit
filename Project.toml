@@ -1,0 +1,8 @@
+name = "MDAnalysisToolkit"
+uuid = "d05ebaa0-644a-11ed-1850-fda3ee653c1f"
+authors = ["Michael Jacobs <jacobsms@ornl.gov>"]
+version = "0.1.0"
+
+[deps]
+LammpsFiles = "9fca0178-4402-11ed-b878-0242ac120002"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
