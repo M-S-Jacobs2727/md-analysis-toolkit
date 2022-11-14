@@ -10,13 +10,17 @@ Recommended: read the data from a text file with
     acf = autocorrelation(data)
 
 ## Input
-`data`: `NxC` matrix
-`dt_values` (optional): vector of length `T`. If not provided, the length will
+
+`data`: NxC matrix
+
+`dt_values` (optional): vector of length T. If not provided, the length will
 be 128, and the values will be 0-15, then `[2^(i+3), 2^(i+4))` with steps of
 `2^i` for `i=1:14` (maximum value of `2^18-2^14 = 245760`).
 
 ## Returns
+
 `dt_values`: vector of Ints (see above)
+
 `acf`: TxC matrix
 
 Note: 
