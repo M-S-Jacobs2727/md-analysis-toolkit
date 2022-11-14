@@ -1,13 +1,31 @@
 import LammpsFiles
 
 """
-    square_Rg(filenames...; sorted=false, masses=nothing)
+    squareRg(filenames::Vector{<:AbstractString}; sorted::Bool=false, masses::Vector{<:Real}=nothing)
     
 Compute the mean square radius of gyration of a system of polymer chains for
-each snapshot, returning a vector of length equal to the number of files
-passed.
+each snapshot, returning a system-averaged value for each dump frame given.
+
+## Positional Arguments
+
+`filenames` (Vector of Strings): Paths leading to LAMMPS dump files.
+
+## Keyword Arguments
+
+`sorted` (Bool): Indicates whether the dump files are sorted by molecule
+ID (perhaps as a consequence of sorting by atom ID).
+
+`masses` (Vector of Reals): By default, the mass of each atom is assumed
+to be 1. If given, should contain one value per atom type such that
+`masses[i]` is the mass of atom type `i`.
+
+## Return Values
+
+`rg2` (Vector of Reals): The average value of the square radius of gyration
+for each dump frame given.
+
 """
-function squareRg(filenames...; sorted=false, masses=nothing)
+function squareRg(filenames::Vector{<:AbstractString}; sorted::Bool=false, masses::Vector{<:Real}=nothing)
     # Read basic info
     frame = LammpsFiles.read_dump(filenames[1])
     mol_col = findfirst(x->x=="mol", frame.properties)

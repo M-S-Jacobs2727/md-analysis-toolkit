@@ -3,28 +3,50 @@ using Statistics
 import LammpsFiles
 
 """
-    mean_square_displacement(filenames...; max_num_frames=100, types=[], bymol=false, masses=nothing)
+    meanSquareDisplacement(filenames::Vector{<:AbstractString}; max_num_frames::Integer=100, types::Vector{<:Integer}=nothing, bymol::Bool=false, masses::Vector{<:Real}=nothing)
 
-## Implemented
-Computes the MSD for a collection of LAMMPS dump files. The range of
-increments is from every 1 snapshot to every `max_num_frames`
-snapshots (100 by default).
+Computes the mean-squared displacement of particles or molecules from a
+collection of LAMMPS dump files.
 
-If `types` is given, then each type is independently evaluated, and an
-overall MSD is given as well. Types are only checked for the first dump
-file, so if atoms change type, that will invalidate the calculation.
-By default, the MSD for each particle is averaged.
+## Positional Arguments
 
-## Not implemented
-If `by_mol` is set to true, then the molecule property must be available in
-the dump file. The center of mass of each molecule will be analyzed
-instead of each atom. This assumes that the mass of each atom type is 1.
-If not, then the masses keyword should be set to a vector where each
-element `mass[i]` is the mass of atoms of type `i`.
+`filenames` (Vector of Strings): Paths leading to LAMMPS dump files.
 
-Note: cannot analyze by type and by molecule at the same time.
+## Keyword Arguments
+
+`max_num_frames` (Integer): The time increments `dt` over which the MSD
+is computed ranges from 1 to this value (default 100).
+
+`types` (Vector of Integers): The atom types to independently analyze.
+By default, only the global average is computed.
+
+### Not yet implemented
+
+`bymol` (Bool): Default is `false`. If `true`, the MSD of the center of 
+mass of each molecule is computed instead. This assumes that the mass of
+each atom type is 1. If not, then the masses keyword should be set.
+
+`masses` (Vector of Reals): Only relevent when `bymol` is set to `true`
+to compute the center of mass per molecule correctly. Should contain
+one value per atom type such that `masses[i]` is the mass of atom type `i`.
+
+## Return Values
+
+`msd` (Matrix of Reals): Values of the mean square displacement. If `types`
+is given, the size is `(max_num_frames, length(types)+1)`, where the first
+column is the global average and each other column corresponds to the
+respective atom type in `types`. Otherwise, the size is `(max_num_frames, 1)`.
+
+If the time between dump frames is `dt`, then row `i` corresponds to a time
+increment of `i*dt`.
+
+Note: meanSquareDisplacement cannot analyze by type and by molecule at the
+same time.
 """
-function meanSquareDisplacement(filenames...; max_num_frames=100, types=nothing, bymol=false, masses=nothing)
+function meanSquareDisplacement(filenames::Vector{<:AbstractString};
+    max_num_frames::Integer=100, types::Vector{<:Integer}=nothing,
+    bymol::Bool=false, masses::Vector{<:Real}=nothing
+)
     # Read basic info
     frame = LammpsFiles.read_dump(filenames[1])
     id_col = findfirst(x->x=="id", frame.properties)
@@ -69,17 +91,17 @@ function meanSquareDisplacement(filenames...; max_num_frames=100, types=nothing,
     # Compute msd for all and for types
     msd = zeros(
         Float64,
-        bytype ? length(types) + 1 : 1,
-        max_num_frames
+        max_num_frames,
+        bytype ? length(types) + 1 : 1
     )
     for dt=1:max_num_frames
         diff = trajectories[ : , : , dt+1:end] - trajectories[ : , : , 1:end-dt]
-        msd[1, dt] = mean(sum(diff .* diff, dims=1))
+        msd[dt, 1] = mean(sum(diff .* diff, dims=1))
 
         if !bytype continue end
 
         for (i, sel) in selections
-            msd[i+1, dt] = mean(sum(diff[ : , sel, : ] .* diff[ : , sel, : ], dims=1))
+            msd[dt, i+1] = mean(sum(diff[ : , sel, : ] .* diff[ : , sel, : ], dims=1))
         end
     end
     return msd

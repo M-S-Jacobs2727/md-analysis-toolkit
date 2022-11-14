@@ -1,12 +1,12 @@
 import LammpsFiles
 
 """
-    radialDistFunc(filenames...; binwidth=0.05, bytype=false, maxdistance=nothing, ndim=3)
+    radialDistFunc(filenames::Vector{<:AbstractString}; binwidth::Real=0.05, bytype::Bool=false, maxdistance::Real=nothing, ndim::Integer=3)
 
 Compute the radial distribution function for a collection of LAMMPS dump
 files.
 
-## Arguments
+## Positional Arguments
 
 `filenames` (Vector of Strings): Paths leading to LAMMPS dump files.
 
@@ -25,7 +25,7 @@ where `L` is the box length).
 If `ndim=2`, then the 3rd (z) dimension is not used to compute
 periodic images.
 
-## Returns
+## Return Values
 
 `binedges` (Vector of Reals): The edges of each bin (length N+1).
 
@@ -39,7 +39,7 @@ Each column corresponds to the respective name in `columnnames`. Each row
 `i` corresponds to the bin [`binedges[i]`, `binedges[i+1]`).
 
 """
-function radialDistFunc(filenames...; binwidth=0.05, bytype=false, maxdistance=nothing, ndim=3)
+function radialDistFunc(filenames::Vector{<:AbstractString}; binwidth::Real=0.05, bytype::Bool=false, maxdistance::Real=nothing, ndim::Integer=3)
     ndim == 3 || ndim == 2 || throw(ArgumentError("argument ndim must be 2 or 3"))
     frame = LammpsFiles.read_dump(filenames[1])
     natoms = frame.natoms
