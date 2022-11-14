@@ -50,8 +50,6 @@ function mean_square_displacement(filenames...; max_num_frames=100, types=nothin
                     frame.atoms[type_col, : ][sort_indices])
             for t in types
         ]
-    else
-        types = []
     end
 
     # Read in coordinates
@@ -69,7 +67,11 @@ function mean_square_displacement(filenames...; max_num_frames=100, types=nothin
     end
 
     # Compute msd for all and for types
-    msd = zeros(Float64, length(types)+1, max_num_frames)
+    msd = zeros(
+        Float64,
+        by_type ? length(types) + 1 : 1,
+        max_num_frames
+    )
     for dt=1:max_num_frames
         diff = all_coords[ : , : , dt+1:end] - all_coords[ : , : , 1:end-dt]
         msd[1, dt] = mean(sum(diff .* diff, dims=1))
