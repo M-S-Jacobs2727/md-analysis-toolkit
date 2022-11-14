@@ -1,27 +1,42 @@
 import LammpsFiles
 
 """
-    radial_dist_func(filenames...; binwidth=0.05, bytype=false, maxdistance=nothing, ndim=3)
+    radialDistFunc(filenames...; binwidth=0.05, bytype=false, maxdistance=nothing, ndim=3)
 
 Compute the radial distribution function for a collection of LAMMPS dump
-files (`filenames`). 
+files.
 
-The width of the radial bins is set to `bin_width=0.05` by default.
+## Arguments
 
-If `bytype=false` (default) then the overall RDF is computed. If 
+`filenames` (Vector of Strings): Paths leading to LAMMPS dump files.
+
+## Keyword Arguments
+
+`binwidth` (Real): Width of the radial bins. Default: 0.05.
+
+`bytype` (Bool): If `false` (the default) then the overall RDF is computed. If 
 `true`, the RDF between each type is computed.
 
-If given, the `maxdistance` dictates the position of the last bin. 
-Otherwise, it is dictated by the box size (equivalent to `maxdistance=L`
+`maxdistance` (Real): If given, indictates the position of the last bin. 
+By default, it is dictated by the box size (equivalent to `maxdistance=L`
 where `L` is the box length).
 
-The number of dimensions is set by `ndim` (default 3).
-If `ndim=2`, then the 3rd dimension is not used to computed
+`ndim` (2 or 3): The number of spatial dimensions (default 3).
+If `ndim=2`, then the 3rd (z) dimension is not used to compute
 periodic images.
 
 ## Returns
-`binedges`: the maximum of each bin
-`rdf`: the value of the RDF for each bin
+
+`binedges` (Vector of Reals): The edges of each bin (length N+1).
+
+`columnnames` (Vector of Strings): The name of each column of `rdf`
+(length C). The first is always 'all'. If `bytype` is `true`, then
+each unordered pair of types '(m, n)' is given, corresponding to a
+the respective column in `rdf`.
+
+`rdf` (Matrix of Reals): The value of the RDF for each bin (size (N, C)).
+Each column corresponds to the respective name in `columnnames`. Each row
+`i` corresponds to the bin [`binedges[i]`, `binedges[i+1]`).
 
 """
 function radialDistFunc(filenames...; binwidth=0.05, bytype=false, maxdistance=nothing, ndim=3)
@@ -30,14 +45,14 @@ function radialDistFunc(filenames...; binwidth=0.05, bytype=false, maxdistance=n
     natoms = frame.natoms
     
     type_col = findfirst(x->x=="type", frame.properties)
+    typecombos = []
+    ntypes = 0
     if bytype
         types = Int.(frame.atoms[type_col, : ])
         uniquetypes = unique(types)
         ntypes = length(uniquetypes)
         typecombos = [(i, j) for i in 1:ntypes for j in i:ntypes]
         typedict = Dict(type=>i+1 for (i, type) in enumerate(typecombos))
-    else
-        ntypes = 0
     end
 
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["x", "y", "z"][1:ndim]]
@@ -48,7 +63,7 @@ function radialDistFunc(filenames...; binwidth=0.05, bytype=false, maxdistance=n
     density = natoms / prod(boxdims[1:ndim])
     
     binedges = range(start=0, stop=maxdistance, step=binwidth)
-    counts = zeros(Int, length(binedges), ntypes * (ntypes + 1) / 2 + 1)
+    counts = zeros(Int, length(binedges)-1, length(typecombos) + 1)
     maxdistance = binedges[end]
 
     for filename in filenames
@@ -72,11 +87,13 @@ function radialDistFunc(filenames...; binwidth=0.05, bytype=false, maxdistance=n
         end
     end
 
-    if ndim == 3
-        rdf = counts ./ (density * 4pi/3 * (binedges.^3 - (binedges .- binwidth).^3) * length(filenames))
-    else
-        rdf = counts ./ (density * pi * (binedges.^2 - (binedges .- binwidth).^2) * length(filenames))
-    end
+    rdf = counts ./ (
+        density
+        * ((ndim==3) ? 4pi/3 : pi)
+        * (binedges[2:end].^ndim - binedges[1:end-1].^ndim)
+        * length(filenames)
+    )
 
-    return (binedges, rdf)
+    columnnames::Vector{String} = ["all"; ["$a" for a in typecombos]]
+    return (binedges, columnnames, rdf)
 end
