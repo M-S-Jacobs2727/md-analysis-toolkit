@@ -8,7 +8,7 @@ files.
 
 ## Positional Arguments
 
-`filenames` (Vector of Strings): Paths leading to LAMMPS dump files.
+`filenames` (Strings): Paths leading to LAMMPS dump files.
 
 ## Keyword Arguments
 

@@ -8,7 +8,7 @@ each snapshot, returning a system-averaged value for each dump frame given.
 
 ## Positional Arguments
 
-`filenames` (Vector of Strings): Paths leading to LAMMPS dump files.
+`filenames` (Strings): Paths leading to LAMMPS dump files.
 
 ## Keyword Arguments
 
