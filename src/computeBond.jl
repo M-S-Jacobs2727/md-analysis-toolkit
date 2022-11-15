@@ -9,20 +9,20 @@ Compute the average, standard deviation, mean-squared average, fluctuations,
 and distribution of bond lengths in a LAMMPS data file, optionally including
 a series of dump files for averaging.
 
-## Positional Arguments
+# Positional Arguments
 
 `datafile` (String): Path leading to a LAMMPS data file.
 
 `dumpfiles` (Strings, optional): Paths leading to LAMMPS dump files with all
 the same atoms and bonds as the data file.
 
-## Keyword Arguments
+# Keyword Arguments
 
 `bondtypes` (Vector of Integers): By default, all bonds are averaged together.
 By specifying a list of bond types, the return values will only account for 
 the types given.
 
-## Return Values
+# Return Values
 
 `bonds` (Named Tuple): 
 - `bondlengths` (Vector of Floats): The length of each bond in each frame read.
@@ -34,7 +34,7 @@ by the number of bonds).
 - `fluctuation` (Float): The difference between `meansq` and the square of
 `average`.
 
-## TODO
+# TODO
 
 - Change `bondtypes` to `bytype` so that it accounts for each bond type
 separately, like `meanSquareDisplacement`.

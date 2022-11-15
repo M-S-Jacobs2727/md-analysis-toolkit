@@ -6,11 +6,11 @@ import LammpsFiles
 Compute the radial distribution function for a collection of LAMMPS dump
 files.
 
-## Positional Arguments
+# Positional Arguments
 
 `filenames` (Strings): Paths leading to LAMMPS dump files.
 
-## Keyword Arguments
+# Keyword Arguments
 
 `binwidth` (Real): Width of the radial bins. Default: 0.05.
 
@@ -25,7 +25,7 @@ where `L` is the box length).
 If `ndim=2`, then the 3rd (z) dimension is not used to compute
 periodic images.
 
-## Return Values
+# Return Values
 
 `binedges` (Vector of Reals): The edges of each bin (length N+1).
 

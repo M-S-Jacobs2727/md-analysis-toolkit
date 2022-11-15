@@ -6,11 +6,11 @@ import LammpsFiles
 Compute the mean square radius of gyration of a system of polymer chains for
 each snapshot, returning a system-averaged value for each dump frame given.
 
-## Positional Arguments
+# Positional Arguments
 
 `filenames` (Strings): Paths leading to LAMMPS dump files.
 
-## Keyword Arguments
+# Keyword Arguments
 
 `sorted` (Bool): Indicates whether the dump files are sorted by molecule
 ID (perhaps as a consequence of sorting by atom ID).
@@ -19,7 +19,7 @@ ID (perhaps as a consequence of sorting by atom ID).
 to be 1. If given, should contain one value per atom type such that
 `masses[i]` is the mass of atom type `i`.
 
-## Return Values
+# Return Values
 
 `rg2` (Vector of Reals): The average value of the square radius of gyration
 for each dump frame given.

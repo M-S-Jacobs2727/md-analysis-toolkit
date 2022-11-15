@@ -8,11 +8,11 @@ import LammpsFiles
 Computes the mean-squared displacement of particles or molecules from a
 collection of LAMMPS dump files.
 
-## Positional Arguments
+# Positional Arguments
 
 `filenames` (Strings): Paths leading to LAMMPS dump files.
 
-## Keyword Arguments
+# Keyword Arguments
 
 `max_num_frames` (Integer): The time increments `dt` over which the MSD
 is computed ranges from 1 to this value (default 100).
@@ -20,7 +20,7 @@ is computed ranges from 1 to this value (default 100).
 `types` (Vector of Integers): The atom types to independently analyze.
 By default, only the global average is computed.
 
-### Not yet implemented
+## Not yet implemented
 
 `bymol` (Bool): Default is `false`. If `true`, the MSD of the center of 
 mass of each molecule is computed instead. This assumes that the mass of
@@ -30,7 +30,7 @@ each atom type is 1. If not, then the masses keyword should be set.
 to compute the center of mass per molecule correctly. Should contain
 one value per atom type such that `masses[i]` is the mass of atom type `i`.
 
-## Return Values
+# Return Values
 
 `msd` (Matrix of Reals): Values of the mean square displacement. If `types`
 is given, the size is `(max_num_frames, length(types)+1)`, where the first
