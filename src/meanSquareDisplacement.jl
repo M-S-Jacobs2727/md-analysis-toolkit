@@ -3,7 +3,7 @@ using Statistics
 import LammpsFiles
 
 """
-    meanSquareDisplacement(filenames::Vector{<:AbstractString}; max_num_frames::Integer=100, types::Vector{<:Integer}=nothing, bymol::Bool=false, masses::Vector{<:Real}=nothing)
+    meanSquareDisplacement(filenames::AbstractString...; max_num_frames::Integer=100, types::Vector{<:Integer}=nothing, bymol::Bool=false, masses::Vector{<:Real}=nothing)
 
 Computes the mean-squared displacement of particles or molecules from a
 collection of LAMMPS dump files.
@@ -43,7 +43,7 @@ increment of `i*dt`.
 Note: meanSquareDisplacement cannot analyze by type and by molecule at the
 same time.
 """
-function meanSquareDisplacement(filenames::Vector{<:AbstractString};
+function meanSquareDisplacement(filenames::AbstractString...;
     max_num_frames::Integer=100, types::Vector{<:Integer}=nothing,
     bymol::Bool=false, masses::Vector{<:Real}=nothing
 )

@@ -1,7 +1,7 @@
 import LammpsFiles
 
 """
-    squareRg(filenames::Vector{<:AbstractString}; sorted::Bool=false, masses::Vector{<:Real}=nothing)
+    squareRg(filenames::AbstractString...; sorted::Bool=false, masses::Vector{<:Real}=nothing)
     
 Compute the mean square radius of gyration of a system of polymer chains for
 each snapshot, returning a system-averaged value for each dump frame given.
@@ -25,7 +25,7 @@ to be 1. If given, should contain one value per atom type such that
 for each dump frame given.
 
 """
-function squareRg(filenames::Vector{<:AbstractString}; sorted::Bool=false, masses::Vector{<:Real}=nothing)
+function squareRg(filenames::AbstractString...; sorted::Bool=false, masses::Vector{<:Real}=nothing)
     # Read basic info
     frame = LammpsFiles.read_dump(filenames[1])
     mol_col = findfirst(x->x=="mol", frame.properties)
