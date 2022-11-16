@@ -29,7 +29,13 @@ function squareRg(filenames::AbstractString...; sorted::Bool=false, masses::Vect
     # Read basic info
     frame = LammpsFiles.readDump(filenames[1])
     mol_col = findfirst(x->x=="mol", frame.properties)
+    if mol_col === nothing
+        throw(KeyError("dump file $(filenames[1]) has no column 'mol'"))
+    end
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]
+    if nothing in coord_cols
+        throw(KeyError("dump file $(filenames[1]) has no columns 'xu', 'yu', or 'zu'"))
+    end
     
     # Index molecules
     molIDs = frame.atoms[mol_col, : ]

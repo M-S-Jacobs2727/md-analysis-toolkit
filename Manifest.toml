@@ -14,7 +14,7 @@ version = "0.5.2+0"
 
 [[deps.LammpsFiles]]
 deps = ["Logging"]
-path = "C:\\Users\\8mj\\.julia\\dev\\LammpsFiles"
+path = "/ccs/home/jacobs27/.julia/dev/LammpsFiles"
 uuid = "9fca0178-4402-11ed-b878-0242ac120002"
 version = "0.1.0"
 
