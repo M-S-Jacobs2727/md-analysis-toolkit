@@ -50,8 +50,17 @@ function meanSquareDisplacement(filenames::AbstractString...;
     # Read basic info
     frame = LammpsFiles.readDump(filenames[1])
     id_col = findfirst(x->x=="id", frame.properties)
+    if id_col === nothing
+        throw(KeyError("dump file $(filenames[1]) has no column 'id'"))
+    end
     type_col = findfirst(x->x=="type", frame.properties)
+    if type_col === nothing
+        throw(KeyError("dump file $(filenames[1]) has no column 'type'"))
+    end
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]
+    if nothing in coord_cols
+        throw(KeyError("dump file $(filenames[1]) has no columns 'xu', 'yu', 'zu'"))
+    end
     max_num_frames = min(max_num_frames, length(filenames) - 1)
 
     # Set up sorting

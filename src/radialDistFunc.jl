@@ -45,6 +45,9 @@ function radialDistFunc(filenames::AbstractString...; binwidth::Real=0.05, bytyp
     natoms = frame.natoms
     
     type_col = findfirst(x->x=="type", frame.properties)
+    if type_col === nothing
+        throw(KeyError("dump file $(filenames[1]) has no column 'type'"))
+    end
     typecombos = []
     ntypes = 0
     if bytype
@@ -56,6 +59,9 @@ function radialDistFunc(filenames::AbstractString...; binwidth::Real=0.05, bytyp
     end
 
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["x", "y", "z"][1:ndim]]
+    if nothing in coord_cols
+        throw(KeyError("dump file $(filenames[1]) has no columns 'xu', 'yu', 'zu'"))
+    end
     boxdims = frame.box[ : , 2] - frame.box[ : , 1]
     if maxdistance == 0.0
         maxdistance = minimum(boxdims[1:ndim])
