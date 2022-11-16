@@ -27,7 +27,7 @@ for each dump frame given.
 """
 function squareRg(filenames::AbstractString...; sorted::Bool=false, masses::Vector{<:Any}=[])
     # Read basic info
-    frame = LammpsFiles.read_dump(filenames[1])
+    frame = LammpsFiles.readDump(filenames[1])
     mol_col = findfirst(x->x=="mol", frame.properties)
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]
     
@@ -41,7 +41,7 @@ function squareRg(filenames::AbstractString...; sorted::Bool=false, masses::Vect
     # Get square radius of gyration for each frame
     rg2 = zeros(Float64, length(filenames))
     for (i, filename) in enumerate(filenames)
-        frame = LammpsFiles.read_dump(filename)
+        frame = LammpsFiles.readDump(filename)
         molecules = frame.atoms[mol_col, : ]
         coords = frame.atoms[coord_cols, : ]
         if !sorted

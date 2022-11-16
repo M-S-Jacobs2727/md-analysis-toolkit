@@ -41,7 +41,7 @@ Each column corresponds to the respective name in `columnnames`. Each row
 """
 function radialDistFunc(filenames::AbstractString...; binwidth::Real=0.05, bytype::Bool=false, maxdistance::Real=0.0, ndim::Integer=3)
     ndim == 3 || ndim == 2 || throw(ArgumentError("argument ndim must be 2 or 3"))
-    frame = LammpsFiles.read_dump(filenames[1])
+    frame = LammpsFiles.readDump(filenames[1])
     natoms = frame.natoms
     
     type_col = findfirst(x->x=="type", frame.properties)
@@ -67,7 +67,7 @@ function radialDistFunc(filenames::AbstractString...; binwidth::Real=0.05, bytyp
     maxdistance = binedges[end]
 
     for filename in filenames
-        frame = LammpsFiles.read_dump(filename)
+        frame = LammpsFiles.readDump(filename)
         coords = frame.atoms[coord_cols, :]
         for i = 1 : natoms-1
             for j = i+1 : natoms

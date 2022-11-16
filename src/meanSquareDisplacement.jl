@@ -48,7 +48,7 @@ function meanSquareDisplacement(filenames::AbstractString...;
     bymol::Bool=false, masses::Vector{<:Any}=[]
 )
     # Read basic info
-    frame = LammpsFiles.read_dump(filenames[1])
+    frame = LammpsFiles.readDump(filenames[1])
     id_col = findfirst(x->x=="id", frame.properties)
     type_col = findfirst(x->x=="type", frame.properties)
     coord_cols = [findfirst(x->x==s, frame.properties) for s in ["xu", "yu", "zu"]]
@@ -79,7 +79,7 @@ function meanSquareDisplacement(filenames::AbstractString...;
     trajectories[ : , : , 1] = coords
 
     for (i, f) in enumerate(filenames[2:end])
-        frame = LammpsFiles.read_dump(f)
+        frame = LammpsFiles.readDump(f)
         coords = frame.atoms[coord_cols, : ]
         if sorted
             trajectories[ : , : , i+1] = coords
