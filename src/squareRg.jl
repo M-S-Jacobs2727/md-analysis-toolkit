@@ -25,7 +25,7 @@ to be 1. If given, should contain one value per atom type such that
 for each dump frame given.
 
 """
-function squareRg(filenames::AbstractString...; sorted::Bool=false, masses::Vector{<:Real}=[])
+function squareRg(filenames::AbstractString...; sorted::Bool=false, masses::Vector{<:Any}=[])
     # Read basic info
     frame = LammpsFiles.read_dump(filenames[1])
     mol_col = findfirst(x->x=="mol", frame.properties)

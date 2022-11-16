@@ -29,7 +29,7 @@ Recommended: read the data from a text file with
     dtvalues, acf = autocorrelation(data)
     
 """
-function autocorrelation(data::Matrix{<:Number}, dtvalues::Vector{<:Real}=[])
+function autocorrelation(data::Matrix{<:Number}, dtvalues::Vector{<:Any}=[])
     if dtvalues === []
         dtvalues = zeros(Int, 128)
         dtvalues[1:16] = 0:15
