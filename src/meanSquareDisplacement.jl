@@ -44,8 +44,8 @@ Note: meanSquareDisplacement cannot analyze by type and by molecule at the
 same time.
 """
 function meanSquareDisplacement(filenames::AbstractString...;
-    max_num_frames::Integer=100, types::Vector{<:Integer}=nothing,
-    bymol::Bool=false, masses::Vector{<:Real}=nothing
+    max_num_frames::Integer=100, types::Vector{<:Integer}=[],
+    bymol::Bool=false, masses::Vector{<:Real}=[]
 )
     # Read basic info
     frame = LammpsFiles.read_dump(filenames[1])
@@ -65,7 +65,7 @@ function meanSquareDisplacement(filenames::AbstractString...;
     end
     
     # Set up types
-    bytype = types !== nothing
+    bytype = types !== []
     if bytype
         selections = [
             findall(x->round(x)==t,

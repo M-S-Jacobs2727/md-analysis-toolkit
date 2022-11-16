@@ -29,8 +29,8 @@ Recommended: read the data from a text file with
     dtvalues, acf = autocorrelation(data)
     
 """
-function autocorrelation(data::Matrix{<:Number}, dtvalues::Vector{<:Real}=nothing)
-    if dtvalues === nothing
+function autocorrelation(data::Matrix{<:Number}, dtvalues::Vector{<:Real}=[])
+    if dtvalues === []
         dtvalues = zeros(Int, 128)
         dtvalues[1:16] = 0:15
         for i in 1:14

@@ -24,13 +24,13 @@ square of `average`.
 - `bondlengths` (Vector of Floats, optional): The length of each
 bond in each frame read. To be used for distribution analysis.
 """
-function computeBond(datafile::AbstractString, bytype::Bool=false, dumpfiles::AbstractString...=nothing;
+function computeBond(datafile::AbstractString, bytype::Bool=false;
     atomstyle::AbstractString="full", return_bondlengths::Bool=false)
 
     data = LammpsFiles.readData(datafile, atomstyle=atomstyle)
     if bytype
         ubondtypes = data.bond_types |> sort |> unique!
-        return computeBond(datafile, ubondtypes, dumpfiles, atomstyle=atomstyle, return_bondlengths=return_bondlengths)
+        return computeBond(datafile, ubondtypes, atomstyle=atomstyle, return_bondlengths=return_bondlengths)
     end
 
     bondlengths = hypot.(
@@ -67,7 +67,7 @@ Returns the same named tuple `bonds`, but each value is instead a vector of
 length `length(bytype)`.
 
 """
-function computeBond(datafile::AbstractString, bytype::Vector{Integer}, dumpfiles::AbstractString...=nothing;
+function computeBond(datafile::AbstractString, bytype::Vector{Integer};
     atomstyle::AbstractString="full", return_bondlengths::Bool=false)
 
     data = LammpsFiles.readData(datafile, atomstyle=atomstyle)
